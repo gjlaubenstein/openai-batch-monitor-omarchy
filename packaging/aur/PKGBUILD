@@ -1,6 +1,6 @@
 # Maintainer: Greg Laubenstein <gjlaubenstein@gmail.com>
 pkgname=omarchy-batch-monitor
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 pkgdesc='OpenAI Batch API status monitor for Omarchy'
 arch=('x86_64')

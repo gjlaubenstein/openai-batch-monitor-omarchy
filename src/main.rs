@@ -40,38 +40,57 @@ enum AppMsg {
     Cancelled(Box<Result<api::Batch>>),
 }
 
+/// Prints an error and waits for a keypress before returning, so a pane
+/// opened from a GUI launcher (no controlling shell to show the message
+/// afterwards) doesn't just flash open and close on a fatal startup error.
+fn die(context: &str, err_lines: &[String]) -> ! {
+    eprintln!("omarchy-batch-monitor: {context}");
+    for line in err_lines {
+        eprintln!("{line}");
+    }
+    eprint!("\nPress Enter to close...");
+    let _ = std::io::Write::flush(&mut std::io::stderr());
+    let mut buf = String::new();
+    let _ = std::io::stdin().read_line(&mut buf);
+    std::process::exit(1);
+}
+
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() {
     let cli = Cli::parse();
 
     let cfg = match config::Config::load(cli.api_key, cli.refresh) {
         Ok(cfg) => cfg,
-        Err(e) => {
-            eprintln!("omarchy-batch-monitor: {e:#}");
-            eprintln!(
+        Err(e) => die(
+            &e.to_string(),
+            &[format!(
                 "\nSet the OPENAI_API_KEY environment variable, pass --api-key, or create a \
-                 config file at {} with:\n\n  api_key = \"sk-...\"\n",
+                 config file at {} with:\n\n  api_key = \"sk-...\"",
                 config::Config::example_path()
-            );
-            std::process::exit(1);
-        }
+            )],
+        ),
     };
 
-    let client = Arc::new(api::Client::new(
+    let client = match api::Client::new(
         cfg.api_key.clone(),
         cfg.organization.clone(),
         cfg.project.clone(),
         None,
-    )?);
+    ) {
+        Ok(client) => Arc::new(client),
+        Err(e) => die("failed to initialize HTTP client", &[format!("{e:#}")]),
+    };
 
-    let mut terminal = setup_terminal()?;
+    let mut terminal = match setup_terminal() {
+        Ok(terminal) => terminal,
+        Err(e) => die("failed to initialize terminal", &[format!("{e:#}")]),
+    };
     let result = run(&mut terminal, client, cfg.refresh_secs).await;
-    restore_terminal(&mut terminal)?;
+    let _ = restore_terminal(&mut terminal);
 
-    if let Err(e) = &result {
-        eprintln!("omarchy-batch-monitor exited with error: {e:#}");
+    if let Err(e) = result {
+        die("exited with error", &[format!("{e:#}")]);
     }
-    result
 }
 
 fn setup_terminal() -> Result<Terminal<CrosstermBackend<std::io::Stdout>>> {
