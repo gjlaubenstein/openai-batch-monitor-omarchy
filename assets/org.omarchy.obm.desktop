@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=Batch Monitor
+Comment=OpenAI Batch API status monitor for Omarchy
+Exec=omarchy-launch-or-focus-tui --app-id=org.omarchy.obm obm
+Terminal=false
+Type=Application
+Icon=org.omarchy.obm
+Categories=Utility;Development;
+Keywords=openai;batch;api;tui;monitor;
+StartupNotify=true

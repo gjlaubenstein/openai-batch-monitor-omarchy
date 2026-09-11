@@ -2,8 +2,12 @@
 name = "omarchy-batch-monitor"
 version = "0.1.0"
 edition = "2021"
+rust-version = "1.88"
 description = "A terminal UI for monitoring OpenAI Batch API job statuses"
-license = "MIT"
+license = "GPL-3.0-only"
+repository = "https://github.com/gjlaubenstein/openai-batch-monitor-omarchy"
+keywords = ["openai", "batch", "tui", "omarchy"]
+categories = ["command-line-utilities"]
 
 [[bin]]
 name = "obm"
@@ -14,7 +18,7 @@ ratatui = "0.29"
 crossterm = { version = "0.28", features = ["event-stream"] }
 futures = "0.3"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "sync"] }
-reqwest = { version = "0.12", features = ["json"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 chrono = { version = "0.4", features = ["clock"] }
@@ -24,6 +28,6 @@ toml = "0.8"
 clap = { version = "4", features = ["derive"] }
 
 [profile.release]
-opt-level = 3
-lto = true
+lto = "thin"
 strip = true
+codegen-units = 1

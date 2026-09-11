@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Batch monitor</title>
+  <rect width="128" height="128" rx="24" fill="#1a1b26"/>
+  <g fill="none" stroke="#c0caf5" stroke-width="6" stroke-linecap="round">
+    <path d="M40 40h58"/>
+    <path d="M40 64h58"/>
+    <path d="M40 88h58"/>
+  </g>
+  <circle cx="26" cy="40" r="7" fill="#9ece6a"/>
+  <circle cx="26" cy="64" r="7" fill="#7dcfff"/>
+  <circle cx="26" cy="88" r="7" fill="#e0af68"/>
+</svg>

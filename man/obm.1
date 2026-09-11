@@ -1,0 +1,56 @@
+.TH OBM 1 "September 2026" "omarchy-batch-monitor 0.1.0" "User Commands"
+.SH NAME
+obm \- OpenAI Batch API status monitor for Omarchy
+.SH SYNOPSIS
+.B obm
+[\fB--api-key\fR \fIKEY\fR]
+[\fB--refresh\fR \fISECS\fR]
+.SH DESCRIPTION
+.B obm
+is a terminal UI that lists and auto-refreshes OpenAI Batch API jobs, with a
+detail panel and the ability to cancel a running batch.
+.SH OPTIONS
+.TP
+.BR --api-key " " \fIKEY\fR
+OpenAI API key. Defaults to the \fBOPENAI_API_KEY\fR environment variable,
+then \fBapi_key\fR in the config file.
+.TP
+.BR --refresh " " \fISECS\fR
+Seconds between automatic refreshes. Default 15.
+.SH CONFIGURATION
+Optional config file at \fI~/.config/omarchy-batch-monitor/config.toml\fR:
+.RS
+.nf
+api_key = "sk-..."
+organization = "org-..."
+project = "proj_..."
+refresh_secs = 15
+.fi
+.RE
+.PP
+\fBOPENAI_ORG_ID\fR, \fBOPENAI_PROJECT_ID\fR, and \fBOPENAI_API_BASE\fR are
+also honored.
+.SH KEYS
+.TP
+.B j/k, arrows
+select next/previous batch
+.TP
+.B g/G, Home/End
+select first/last
+.TP
+.B r
+refresh now
+.TP
+.B c
+cancel the selected batch (with confirmation)
+.TP
+.B s
+toggle sort order
+.TP
+.B ?
+toggle help
+.TP
+.B q, Esc
+quit
+.SH SEE ALSO
+OpenAI Batch API guide: https://developers.openai.com/api/docs/guides/batch

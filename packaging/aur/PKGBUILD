@@ -1,0 +1,38 @@
+# Maintainer: Greg Laubenstein <gjlaubenstein@gmail.com>
+pkgname=omarchy-batch-monitor
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='OpenAI Batch API status monitor for Omarchy'
+arch=('x86_64')
+url='https://github.com/gjlaubenstein/openai-batch-monitor-omarchy'
+license=('GPL-3.0-only')
+depends=('gcc-libs' 'glibc' 'omarchy')
+makedepends=('cargo' 'rust')
+# The `ring` crate's precompiled assembly objects don't survive makepkg's
+# default -flto=auto CFLAGS (undefined references at link time), so disable
+# the C-level LTO makepkg would otherwise inject. Rust-level LTO is still
+# controlled separately by Cargo.toml's [profile.release].
+options=('!lto')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+# Replace SKIP with the published source archive SHA-256 before the first AUR push.
+sha256sums=('SKIP')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+  cargo build --frozen --release
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  install -Dm755 target/release/obm "$pkgdir/usr/bin/obm"
+  install -Dm644 assets/org.omarchy.obm.desktop "$pkgdir/usr/share/applications/org.omarchy.obm.desktop"
+  install -Dm644 assets/org.omarchy.obm.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/org.omarchy.obm.svg"
+  install -Dm644 man/obm.1 "$pkgdir/usr/share/man/man1/obm.1"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+}

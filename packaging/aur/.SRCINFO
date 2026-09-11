@@ -1,0 +1,17 @@
+pkgbase = omarchy-batch-monitor
+	pkgdesc = OpenAI Batch API status monitor for Omarchy
+	pkgver = 0.1.0
+	pkgrel = 1
+	url = https://github.com/gjlaubenstein/openai-batch-monitor-omarchy
+	arch = x86_64
+	license = GPL-3.0-only
+	makedepends = cargo
+	makedepends = rust
+	depends = gcc-libs
+	depends = glibc
+	depends = omarchy
+	options = !lto
+	source = omarchy-batch-monitor-0.1.0.tar.gz::https://github.com/gjlaubenstein/openai-batch-monitor-omarchy/archive/refs/tags/v0.1.0.tar.gz
+	sha256sums = SKIP
+
+pkgname = omarchy-batch-monitor
